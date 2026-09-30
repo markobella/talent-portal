@@ -83,7 +83,7 @@ export async function POST(req: Request) {
     assignments.push(Prisma.sql`"updatedAt" = CURRENT_TIMESTAMP`);
 
     await prisma.$executeRaw(
-      Prisma.sql`UPDATE "TalentProfile" SET ${Prisma.join(assignments, Prisma.sql`, `)} WHERE "id" = ${profile.id}`,
+      Prisma.sql`UPDATE "TalentProfile" SET ${Prisma.join(assignments, ", ")} WHERE "id" = ${profile.id}` as any,
     );
 
     const rows = await prisma.$queryRaw<
@@ -95,7 +95,7 @@ export async function POST(req: Request) {
         showcaseUseGlassTheme: boolean | number | null;
       }>
     >(
-      Prisma.sql`SELECT "id", "updatedAt", "showcaseShowContactInfo", "showcaseShowBasicInfo", "showcaseUseGlassTheme" FROM "TalentProfile" WHERE "id" = ${profile.id} LIMIT 1`,
+      Prisma.sql`SELECT "id", "updatedAt", "showcaseShowContactInfo", "showcaseShowBasicInfo", "showcaseUseGlassTheme" FROM "TalentProfile" WHERE "id" = ${profile.id} LIMIT 1` as any,
     );
 
     const row = rows[0];

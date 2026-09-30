@@ -247,7 +247,7 @@ export function PartnerTalentProfilePageContent(props: {
     <TalentProfileClient
       glassThemeEnabled={props.glassThemeEnabled}
       navRole="PARTNER"
-      workspace={props.workspace}
+      workspace={props.workspace ?? { agencyName: "", agencySub: "" }}
       readOnly
       backHref="/partner/directory"
       backLabel="← Back to directory"

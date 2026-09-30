@@ -146,7 +146,7 @@ export function PartnerDirectoryClient(props: {
 
   return (
     <div className={roleShellClass(props.glassThemeEnabled)}>
-      <AppNav role="PARTNER" workspace={props.workspace} />
+      <AppNav role="PARTNER" workspace={props.workspace ?? { agencyName: "", agencySub: "" }} />
 
       <div className="mx-auto max-w-7xl px-4 py-6 sm:py-8">
         <div className="rounded-[var(--radius-xl)] border-mist bg-surface p-5 sm:p-6 lg:p-8">

@@ -152,6 +152,7 @@ export type TalentShowcaseData = {
   galleryItems: {
     id: string;
     kind: "PHOTO" | "VIDEO";
+    storagePath?: string | null;
     fileName: string | null;
     mimeType: string | null;
     width: number | null;
@@ -233,7 +234,7 @@ const talentProfileSelectBaseWithoutPrivacy = {
     where: { type: { in: [...GALLERY_MEDIA_DB_TYPES] }, reviewStatus: "APPROVED" },
     orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
     take: 10,
-    select: { id: true, type: true, fileName: true, mimeType: true, createdAt: true },
+    select: { id: true, type: true, storagePath: true, width: true, height: true, fileName: true, mimeType: true, createdAt: true },
   },
   setcards: {
     orderBy: { createdAt: "desc" },
@@ -258,7 +259,7 @@ const talentProfileSelectBaseWithoutMediaDims = {
     where: talentProfileSelectBaseWithoutPrivacy.mediaItems.where,
     orderBy: talentProfileSelectBaseWithoutPrivacy.mediaItems.orderBy,
     take: talentProfileSelectBaseWithoutPrivacy.mediaItems.take,
-    select: { id: true, type: true, fileName: true, mimeType: true, createdAt: true },
+    select: { id: true, type: true, storagePath: true, width: true, height: true, fileName: true, mimeType: true, createdAt: true },
   },
 } as const;
 
@@ -268,7 +269,7 @@ const talentProfileSelectBaseWithoutPrivacyWithoutMediaDims = {
     where: talentProfileSelectBaseWithoutPrivacy.mediaItems.where,
     orderBy: talentProfileSelectBaseWithoutPrivacy.mediaItems.orderBy,
     take: talentProfileSelectBaseWithoutPrivacy.mediaItems.take,
-    select: { id: true, type: true, fileName: true, mimeType: true, createdAt: true },
+    select: { id: true, type: true, storagePath: true, width: true, height: true, fileName: true, mimeType: true, createdAt: true },
   },
 } as const;
 
@@ -591,6 +592,7 @@ function toShowcaseData(match: TalentMatch): TalentShowcaseData {
     galleryItems: profile.mediaItems.map((item) => ({
       id: item.id,
       kind: galleryKindFromDbType(item.type, item.mimeType),
+      storagePath: (item as any).storagePath ?? null,
       fileName: item.fileName,
       mimeType: item.mimeType,
       width: typeof (item as any).width === "number" ? (item as any).width : null,

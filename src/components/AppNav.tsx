@@ -257,7 +257,7 @@ export function AppNav(props: {
                 aria-haspopup="menu"
                 aria-expanded={accountOpen}
               >
-                <Avatar size={32} shape="circle" name={null} fallbackInitials="TP" />
+                <Avatar size="sm" shape="circle" name={null} fallbackInitials="TP" />
                 <ChevronDown
                   size={15}
                   strokeWidth={1.75}

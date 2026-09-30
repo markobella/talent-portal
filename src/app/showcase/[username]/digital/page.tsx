@@ -43,7 +43,7 @@ export default async function DigitalShowcasePage(props: {
       result.push({
         ...src,
         id: `${src.id}__test_${i}`,
-        storageId: src.id,
+        storagePath: src.id,
         width: variant.width,
         height: variant.height,
       });

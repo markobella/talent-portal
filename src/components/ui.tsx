@@ -520,20 +520,24 @@ export interface AvatarProps {
   shape?: "square" | "circle";
   className?: string;
   alt?: string;
+  fallbackInitials?: string | null | undefined;
 }
 
-export function Avatar({ src, name, size = "md", shape = "square", className = "", alt }: AvatarProps) {
+export function Avatar({ src, name, size = "md", shape = "square", className = "", alt, fallbackInitials }: AvatarProps) {
   const szMap = { sm: 32, md: 40, lg: 56, xl: 96 } as const;
   const px = szMap[size];
   const radius = shape === "circle" ? "rounded-full" : "rounded-[var(--radius-lg)]";
   const initials = useMemo(() => {
     const trimmed = (name ?? "").trim();
-    if (!trimmed) return "";
-    const parts = trimmed.split(/\s+/).filter(Boolean);
-    if (parts.length === 0) return "";
-    if (parts.length === 1) return parts[0][0]?.toUpperCase() ?? "";
-    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-  }, [name]);
+    if (trimmed) {
+      const parts = trimmed.split(/\s+/).filter(Boolean);
+      if (parts.length === 1) return parts[0][0]?.toUpperCase() ?? "";
+      if (parts.length > 1) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    }
+    // name empty -> prefer explicit fallbackInitials prop (if non-empty string)
+    const fb = typeof fallbackInitials === "string" ? fallbackInitials.trim() : "";
+    return fb ? fb.slice(0, 2).toUpperCase() : "";
+  }, [name, fallbackInitials]);
 
   return (
     <div

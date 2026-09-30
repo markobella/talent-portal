@@ -281,7 +281,7 @@ type ShowcaseMeasurements = {
 
 type ShowcaseGalleryItem = {
   id: string;
-  storageId?: string | null;
+  storagePath?: string | null;
   kind: "PHOTO" | "VIDEO";
   fileName: string | null;
   mimeType: string | null;
@@ -596,7 +596,7 @@ export function TalentShowcaseDigital(props: TalentShowcaseDigitalProps) {
     [viewerIndex - 1, viewerIndex + 1].forEach((i) => {
       const it = viewerItems[i];
       if (!it) return;
-      const fetchId = it.storageId ?? it.id;
+      const fetchId = it.storagePath ?? it.id;
       const src = `${props.galleryRouteBase}/${fetchId}?v=${encodeURIComponent(it.createdAt)}`;
       if (it.kind === "PHOTO") {
         const prefetch = document.createElement("link");
@@ -796,7 +796,7 @@ export function TalentShowcaseDigital(props: TalentShowcaseDigitalProps) {
                   onPointerLeave={onTilePointerLeave}
                 >
                   <Image
-                    src={`${props.galleryRouteBase}/${hero.storageId ?? hero.id}?v=${encodeURIComponent(hero.createdAt)}`}
+                    src={`${props.galleryRouteBase}/${hero.storagePath ?? hero.id}?v=${encodeURIComponent(hero.createdAt)}`}
                     alt={hero.fileName ?? "Primary editorial photo"}
                     fill
                     sizes="(min-width: 1024px) 58vw, (min-width: 768px) 58vw, 100vw"
@@ -1086,7 +1086,7 @@ export function TalentShowcaseDigital(props: TalentShowcaseDigitalProps) {
                 const w = media.width && media.width > 0 ? media.width : 1600;
                 const h = media.height && media.height > 0 ? media.height : 2000;
                 const isVideo = media.kind === "VIDEO";
-                const fetchId = media.storageId ?? media.id;
+                const fetchId = media.storagePath ?? media.id;
                 const mediaSrc = `${props.galleryRouteBase}/${fetchId}?v=${encodeURIComponent(media.createdAt)}`;
                 const stagger = Math.min(i, 14) * 40;
                 return (
@@ -1694,7 +1694,7 @@ export function TalentShowcaseDigital(props: TalentShowcaseDigitalProps) {
               <div className="relative mx-12 sm:mx-16 flex h-full w-full items-center justify-center">
                 {viewerItem.kind === "VIDEO" ? (
                   <video
-                    src={`${props.galleryRouteBase}/${viewerItem.storageId ?? viewerItem.id}?v=${encodeURIComponent(viewerItem.createdAt)}`}
+                    src={`${props.galleryRouteBase}/${viewerItem.storagePath ?? viewerItem.id}?v=${encodeURIComponent(viewerItem.createdAt)}`}
                     className="max-h-full max-w-full w-auto h-auto object-contain rounded-sm"
                     controls
                     autoPlay
@@ -1705,7 +1705,7 @@ export function TalentShowcaseDigital(props: TalentShowcaseDigitalProps) {
                   <div className="relative w-full h-full flex items-center justify-center">
                     <Image
                       alt={viewerItem.fileName ?? "Portfolio photo"}
-                      src={`${props.galleryRouteBase}/${viewerItem.storageId ?? viewerItem.id}?v=${encodeURIComponent(viewerItem.createdAt)}`}
+                      src={`${props.galleryRouteBase}/${viewerItem.storagePath ?? viewerItem.id}?v=${encodeURIComponent(viewerItem.createdAt)}`}
                       width={viewerItem.width ?? 2400}
                       height={viewerItem.height ?? 3000}
                       sizes="100vw"

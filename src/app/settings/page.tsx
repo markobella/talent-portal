@@ -65,7 +65,7 @@ export default async function SettingsPage() {
       message.includes("Unknown field `displayName`");
     if (!missingPrivacy) throw error;
 
-    user = await prisma.user.findUnique({
+    user = (await prisma.user.findUnique({
       where: { id: session.user.id },
       select: {
         email: true,
@@ -75,7 +75,7 @@ export default async function SettingsPage() {
         logoUpdatedAt: true,
         talentProfile: { select: { id: true } },
       },
-    });
+    })) as NonNullable<typeof user>;
   }
 
   const showcaseThemeRaw = user?.showcaseTheme ?? null;
@@ -91,7 +91,7 @@ export default async function SettingsPage() {
     >
       <AppNav
         role={session.user.role}
-        workspace={workspace}
+        workspace={workspace ?? { agencyName: "", agencySub: "" }}
       />
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:py-12">
         <SectionHeader

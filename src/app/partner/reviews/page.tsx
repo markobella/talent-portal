@@ -162,7 +162,7 @@ export default async function PartnerReviewsPage(props: { searchParams: Promise<
     <div className={roleShellClass(glassThemeEnabled)}>
       <AppNav
         role="PARTNER"
-        workspace={workspace}
+        workspace={workspace ?? { agencyName: "", agencySub: "" }}
       />
 
       <div className="mx-auto max-w-7xl px-4 py-6 sm:py-8">

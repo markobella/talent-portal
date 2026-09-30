@@ -40,7 +40,7 @@ export default async function AdminModerationHistoryPage() {
 
   return (
     <div className="min-h-screen bg-[#f6f7f5]">
-      <AppNav role="ADMIN" workspace={workspace} />
+      <AppNav role="ADMIN" workspace={workspace ?? { agencyName: "", agencySub: "" }} />
       <div className="mx-auto max-w-6xl px-4 py-6 sm:py-8">
         <ModerationHistoryClient
           history={history.map((item) => {

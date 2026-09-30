@@ -274,7 +274,7 @@ export default async function TalentProfilePage() {
   return (
     <TalentProfileClient
       glassThemeEnabled={glassThemeEnabled}
-      workspace={workspace}
+      workspace={workspace ?? { agencyName: "", agencySub: "" }}
       user={{
         id: user.id,
         email: user.email,

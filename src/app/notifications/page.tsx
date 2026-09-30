@@ -23,7 +23,7 @@ export default async function NotificationsPage() {
     <div className={[roleShellClass(glassThemeEnabled), useSoftGlassSections ? "glass-soft-sections" : ""].join(" ")}>
       <AppNav
         role={session.user.role}
-        workspace={workspace}
+        workspace={workspace ?? { agencyName: "", agencySub: "" }}
       />
       <div className="mx-auto max-w-7xl px-4 py-6 sm:py-8">
         <div className="rounded-[var(--radius-xl)] border-mist bg-surface p-5 sm:p-6 lg:p-8">

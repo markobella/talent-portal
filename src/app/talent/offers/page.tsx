@@ -77,7 +77,7 @@ export default async function TalentOffersPage(props: { searchParams: Promise<Se
 
   return (
     <div className={roleShellClass(glassThemeEnabled)}>
-      <AppNav role="TALENT" workspace={workspace} />
+      <AppNav role="TALENT" workspace={workspace ?? { agencyName: "", agencySub: "" }} />
 
       <div className="mx-auto max-w-7xl px-4 py-6 sm:py-8">
         <div className="rounded-[var(--radius-xl)] border-mist bg-surface p-5 sm:p-6 lg:p-8">

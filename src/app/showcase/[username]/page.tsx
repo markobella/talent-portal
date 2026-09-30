@@ -261,15 +261,20 @@ export default async function ShowcasePage(props: { params: Promise<{ username: 
             <section className="rounded-[28px] border border-black/5 bg-white/70 px-5 py-5">
               <SectionTitle title="Measurements" subtitle={showcase.measurements ? `All values in ${measureLabel(showcase.measurements.unit)}` : "No measurements listed"} />
               {showcase.measurements ? (
-                <div className="mt-3 grid grid-cols-1 gap-x-5 gap-y-3 sm:grid-cols-2">
-                  {measurementRows.map((item) => (
-                    <FieldItem
-                      key={item.label}
-                      label={item.label}
-                      value={item.value !== null ? `${item.value} ${measureLabel(showcase.measurements.unit)}` : "—"}
-                    />
-                  ))}
-                </div>
+                (() => {
+                  const measurements = showcase.measurements;
+                  return (
+                    <div className="mt-3 grid grid-cols-1 gap-x-5 gap-y-3 sm:grid-cols-2">
+                      {measurementRows.map((item) => (
+                        <FieldItem
+                          key={item.label}
+                          label={item.label}
+                          value={item.value !== null ? `${item.value} ${measureLabel(measurements.unit)}` : "—"}
+                        />
+                      ))}
+                    </div>
+                  );
+                })()
               ) : (
                 <div className="mt-3 text-[13px] leading-6 text-black/60">Measurements will appear here when available.</div>
               )}

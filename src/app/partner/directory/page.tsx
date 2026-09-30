@@ -82,5 +82,5 @@ export default async function PartnerDirectoryPage(props: { searchParams: Promis
       };
     });
 
-  return <PartnerDirectoryClient initialItems={items} initialFilters={{ q, city, country, minH, maxH }} glassThemeEnabled={glassThemeEnabled} workspace={workspace} />;
+  return <PartnerDirectoryClient initialItems={items} initialFilters={{ q, city, country, minH, maxH }} glassThemeEnabled={glassThemeEnabled} workspace={workspace ?? { agencyName: "", agencySub: "" }} />;
 }

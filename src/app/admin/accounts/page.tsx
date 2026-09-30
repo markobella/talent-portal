@@ -8,7 +8,7 @@ export default async function AdminAccountsPage() {
 
   return (
     <div className="min-h-screen bg-bg">
-      <AppNav role="ADMIN" workspace={workspace} />
+      <AppNav role="ADMIN" workspace={workspace ?? { agencyName: "", agencySub: "" }} />
       <div className="mx-auto max-w-7xl px-4 py-6 sm:py-8">
         <div className="rounded-[var(--radius-xl)] border-mist bg-surface p-5 sm:p-6 lg:p-8">
           <div className="text-sm font-medium text-stone">Admin</div>

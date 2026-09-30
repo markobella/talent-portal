@@ -1576,7 +1576,7 @@ export function TalentProfileClient(props: {
         useSoftGlassSections ? "talent-glass-soft" : "",
       ].join(" ")}
     >
-      {showNav ? <AppNav role={props.navRole ?? "TALENT"} workspace={props.workspace} /> : null}
+      {showNav ? <AppNav role={props.navRole ?? "TALENT"} workspace={props.workspace ?? { agencyName: "", agencySub: "" }} /> : null}
 
       <div className="mx-auto max-w-6xl px-4 py-6 sm:py-8">
         {props.backHref ? (
