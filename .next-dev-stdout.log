@@ -1,0 +1,18 @@
+▲ Next.js 16.2.4 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.2:3000
+- Environments: .env
+✓ Ready in 678ms
+
+ GET /settings 200 in 1941ms (next.js: 759ms, application-code: 1182ms)
+ GET /showcase/talent 200 in 1942ms (next.js: 1411ms, application-code: 532ms)
+ GET /@vite/client 404 in 411ms (next.js: 227ms, application-code: 185ms)
+ GET /api/notifications/unread-count 200 in 197ms (next.js: 135ms, application-code: 62ms)
+ GET /showcase/talent/digital 200 in 997ms (next.js: 895ms, application-code: 101ms)
+ GET /settings 200 in 75ms (next.js: 7ms, application-code: 68ms)
+ GET /@vite/client 404 in 45ms (next.js: 12ms, application-code: 33ms)
+ GET /api/public/setcards/cmorr2ytk0000sgw04qbn016v 200 in 1026ms (next.js: 944ms, application-code: 82ms)
+ GET /@vite/client 404 in 48ms (next.js: 12ms, application-code: 36ms)
+ GET /api/public/gallery/cmouig0z9000huow0wz62h6yw?v=2026-05-06T20%3A29%3A12.309Z 200 in 926ms (next.js: 879ms, application-code: 47ms)
+ GET /@vite/client 404 in 46ms (next.js: 13ms, application-code: 34ms)
+[?25h

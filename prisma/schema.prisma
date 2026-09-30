@@ -1,0 +1,360 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum Role {
+  TALENT
+  PARTNER
+  ADMIN
+}
+
+enum OfferStatus {
+  PENDING_ADMIN
+  APPROVED
+  ADMIN_REJECTED
+  SENT
+  ACCEPTED
+  DECLINED
+  WITHDRAWN
+}
+
+enum OfferProjectType {
+  PHOTO_SHOOT
+  VIDEO_SHOOT
+  PHOTO_VIDEO_SHOOT
+  PERFORMANCE
+  HOSTING
+  OTHER
+}
+
+enum NotificationType {
+  OFFER_SUBMITTED
+  OFFER_APPROVED
+  OFFER_REJECTED
+  OFFER_ACCEPTED
+  OFFER_DECLINED
+  OFFER_MESSAGE
+  MEDIA_SUBMITTED
+  MEDIA_APPROVED
+  MEDIA_DENIED
+  PROFILE_SUBMITTED
+  PROFILE_APPROVED
+  PROFILE_REJECTED
+}
+
+enum MediaReviewStatus {
+  PENDING
+  APPROVED
+  DENIED
+}
+
+enum TalentProfileReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum ProfileSection {
+  VITALS
+  BASIC
+  SOCIAL
+  MEASUREMENTS
+  MEDIA
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  role         Role
+  name         String?
+  displayName  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  showcaseTheme String?
+
+  logoFileName    String?
+  logoMimeType    String?
+  logoStoragePath String?
+  logoUpdatedAt   DateTime?
+
+  talentProfile        TalentProfile?
+  managedTalentProfiles TalentProfile[]         @relation("PartnerTalentRoster")
+  partnerOffersSent    Offer[]            @relation("PartnerOffers")
+  talentOffersReceived Offer[]            @relation("TalentOffers")
+  reviewedOffers       Offer[]            @relation("OfferAdminReviewer")
+  offerMessages        OfferMessage[]
+  uploadedSetcards     Setcard[]          @relation("SetcardUploader")
+  updateLogs           ProfileUpdateLog[] @relation("LogActor")
+  notifications        Notification[]
+  adminAuditLogs       AdminAuditLog[]    @relation("AdminAuditActor")
+  submittedProfileReviews    TalentProfileReview[] @relation("ReviewTalentSubmitter")
+  reviewedProfileReviews     TalentProfileReview[] @relation("ReviewPartnerReviewer")
+}
+
+model TalentProfile {
+  id        String @id @default(cuid())
+  userId    String @unique
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  partnerId String?
+  partner   User?   @relation("PartnerTalentRoster", fields: [partnerId], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  firstApprovedAt DateTime?
+
+  displayName    String
+  alias          String?
+  dateOfBirth    DateTime?
+  locationCity   String?
+  locationCountry String?
+
+  avatarFileName    String?
+  avatarMimeType    String?
+  avatarStoragePath String?
+  avatarUpdatedAt   DateTime?
+  pendingAvatarFileName    String?
+  pendingAvatarMimeType    String?
+  pendingAvatarStoragePath String?
+  pendingAvatarUpdatedAt   DateTime?
+  avatarReviewStatus MediaReviewStatus?
+  avatarReviewNotes  String?
+  avatarReviewedAt   DateTime?
+  avatarReviewedById String?
+
+  phoneNumber      String?
+  employmentStatus String?
+  educationLevel   String?
+  collegeCourse    String?
+  nationality      String?
+  showcaseShowContactInfo Boolean @default(false)
+  showcaseShowBasicInfo   Boolean @default(false)
+  showcaseUseGlassTheme   Boolean @default(false)
+
+  experienceYears Int?
+  modelingTypes   Json?
+  talents         Json?
+  experienceItems Json?
+
+  heightIn   Float?
+  weightLbs  Float?
+  skinTone   String?
+  eyeColor   String?
+  shirtSize  String?
+  pantsSize  String?
+  dressSize  String?
+  shoeSize   Float?
+
+  tattoos           Boolean?
+  tattooLocations   String?
+  piercings         Boolean?
+  piercingLocations String?
+  birthmarks        Boolean?
+  birthmarkLocations String?
+  aboutMe           String?
+
+  measurements TalentMeasurements?
+  socialLinks  SocialLink[]
+  mediaItems   MediaItem[]
+  setcards     Setcard[]
+  updateLogs   ProfileUpdateLog[]
+}
+
+model TalentMeasurements {
+  id             String @id @default(cuid())
+  talentProfileId String @unique
+  talentProfile  TalentProfile @relation(fields: [talentProfileId], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  unit          String @default("in")
+  bust          Float?
+  underBust     Float?
+  naturalWaist  Float?
+  hips          Float?
+  waistToFloor  Float?
+  hollowToHem   Float?
+  shoulderWidth Float?
+  backLength    Float?
+}
+
+model SocialLink {
+  id             String @id @default(cuid())
+  talentProfileId String
+  talentProfile  TalentProfile @relation(fields: [talentProfileId], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  platform  String
+  handle    String?
+  url       String?
+  followers Int?
+
+  @@index([talentProfileId])
+}
+
+model MediaItem {
+  id             String @id @default(cuid())
+  talentProfileId String
+  talentProfile  TalentProfile @relation(fields: [talentProfileId], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
+
+  type      String
+  title     String?
+  url       String?
+  fileName    String?
+  mimeType    String?
+  storagePath String?
+  width     Int?
+  height    Int?
+  sortOrder Int @default(0)
+  reviewStatus MediaReviewStatus @default(APPROVED)
+  reviewNotes  String?
+  reviewedAt   DateTime?
+  reviewedById String?
+
+  @@index([talentProfileId])
+  @@index([talentProfileId, reviewStatus])
+}
+
+model Offer {
+  id        String      @id @default(cuid())
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  status    OfferStatus @default(PENDING_ADMIN)
+
+  partnerId String
+  partner   User @relation("PartnerOffers", fields: [partnerId], references: [id], onDelete: Cascade)
+
+  talentId String
+  talent   User @relation("TalentOffers", fields: [talentId], references: [id], onDelete: Cascade)
+
+  title        String
+  projectType  OfferProjectType?
+  projectDate  DateTime?
+  startTime    String?
+  endTime      String?
+  amountPhp    Int?
+  transportAllowance Boolean @default(false)
+  message      String?
+  compensation String?
+
+  adminReviewedAt      DateTime?
+  adminReviewerId      String?
+  adminReviewer        User?     @relation("OfferAdminReviewer", fields: [adminReviewerId], references: [id], onDelete: SetNull)
+  adminRejectionReason String?
+
+  messages OfferMessage[]
+
+  @@index([partnerId])
+  @@index([talentId])
+  @@index([adminReviewerId])
+  @@index([status])
+}
+
+model OfferMessage {
+  id        String   @id @default(cuid())
+  offerId   String
+  offer     Offer    @relation(fields: [offerId], references: [id], onDelete: Cascade)
+  senderId  String
+  sender    User     @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  body String
+
+  @@index([offerId])
+  @@index([senderId])
+  @@index([createdAt])
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime         @default(now())
+  readAt    DateTime?
+
+  type  NotificationType
+  title String
+  body  String?
+  data  Json?
+
+  @@index([userId])
+  @@index([userId, readAt])
+  @@index([createdAt])
+}
+
+model AdminAuditLog {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  actorId String
+  actor   User @relation("AdminAuditActor", fields: [actorId], references: [id], onDelete: Cascade)
+
+  action     String
+  entityType String
+  entityId   String?
+  details    Json?
+
+  @@index([actorId])
+  @@index([createdAt])
+  @@index([entityType])
+}
+
+model Setcard {
+  id             String @id @default(cuid())
+  talentProfileId String
+  talentProfile  TalentProfile @relation(fields: [talentProfileId], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
+
+  uploadedById String
+  uploadedBy   User @relation("SetcardUploader", fields: [uploadedById], references: [id], onDelete: Cascade)
+
+  fileName    String
+  mimeType    String
+  storagePath String
+
+  @@index([talentProfileId])
+}
+
+model ProfileUpdateLog {
+  id             String @id @default(cuid())
+  talentProfileId String
+  talentProfile  TalentProfile @relation(fields: [talentProfileId], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
+
+  actorId String
+  actor   User @relation("LogActor", fields: [actorId], references: [id], onDelete: Cascade)
+
+  section ProfileSection
+  changes Json
+
+  @@index([talentProfileId])
+  @@index([actorId])
+  @@index([section])
+}
+
+model TalentProfileReview {
+  id        String                     @id @default(cuid())
+  status    TalentProfileReviewStatus  @default(PENDING)
+
+  talentUserId String
+  talent       User   @relation("ReviewTalentSubmitter", fields: [talentUserId], references: [id], onDelete: Cascade)
+
+  partnerId   String?
+  partner     User?   @relation("ReviewPartnerReviewer", fields: [partnerId], references: [id], onDelete: SetNull)
+
+  changesJson       Json
+  rejectionComment  String?
+
+  submittedAt DateTime @default(now())
+  reviewedAt  DateTime?
+
+  @@index([talentUserId])
+  @@index([partnerId])
+  @@index([status])
+  @@index([submittedAt])
+}

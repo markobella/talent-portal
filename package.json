@@ -1,0 +1,41 @@
+{
+  "name": "model-portal",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "prisma generate && next dev --webpack",
+    "build": "prisma generate && next build",
+    "start": "prisma generate && next start",
+    "lint": "eslint",
+    "postinstall": "prisma generate",
+    "db:seed": "node prisma/seed.js",
+    "db:reset": "npx prisma migrate reset --force && node prisma/seed.js"
+  },
+  "dependencies": {
+    "@prisma/adapter-better-sqlite3": "^7.8.0",
+    "@prisma/client": "^7.8.0",
+    "bcryptjs": "^3.0.3",
+    "better-sqlite3": "^12.9.0",
+    "dotenv": "^17.4.2",
+    "justified-layout": "^4.1.0",
+    "lucide-react": "^1.31.0",
+    "next": "16.2.4",
+    "next-auth": "^4.24.14",
+    "prisma": "^7.8.0",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.4",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
