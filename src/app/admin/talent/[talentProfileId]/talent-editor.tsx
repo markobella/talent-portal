@@ -25,6 +25,8 @@ type SocialLinkDTO = {
   followers: number | null;
 };
 
+type PartnerOption = { id: string; displayName: string };
+
 type ProfileDTO = {
   id: string;
   displayName: string;
@@ -56,6 +58,8 @@ type ProfileDTO = {
   birthmarkLocations: string | null;
   updatedAt: string;
   avatarUpdatedAt: string | null;
+  partnerId?: string | null;
+  partnerDisplayName?: string | null;
 };
 
 const SOCIAL_PLATFORM_OPTIONS = ["Instagram", "Tiktok", "YouTube", "Facebook", "X"] as const;
@@ -243,6 +247,7 @@ export function AdminTalentEditor(props: {
   profile: ProfileDTO;
   measurements: MeasurementsDTO | null;
   socialLinks: SocialLinkDTO[];
+  partners?: PartnerOption[];
 }) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
@@ -337,6 +342,7 @@ export function AdminTalentEditor(props: {
       educationOther: education.other,
       collegeCourse: props.profile.collegeCourse ?? "",
       nationality: props.profile.nationality ?? "",
+      partnerId: props.profile.partnerId ?? "",
     };
   });
 
@@ -391,6 +397,12 @@ export function AdminTalentEditor(props: {
         educationLevel: educationLevel ? educationLevel : null,
         collegeCourse: basicForm.collegeCourse.trim() ? basicForm.collegeCourse.trim() : null,
         nationality: basicForm.nationality.trim() ? basicForm.nationality.trim() : null,
+        partnerId:
+          basicForm.partnerId === ""
+            ? undefined
+            : basicForm.partnerId === null
+              ? null
+              : basicForm.partnerId,
       }),
     });
     setSaving(false);
@@ -524,6 +536,10 @@ export function AdminTalentEditor(props: {
         <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           <InfoTile label="DISPLAY NAME" value={props.profile.displayName} />
           <InfoTile label="ALIAS" value={props.profile.alias ?? "—"} />
+          <InfoTile
+            label="PARTNER AGENCY"
+            value={props.profile.partnerDisplayName?.trim() ? props.profile.partnerDisplayName : "Unassigned / Freelance"}
+          />
           <InfoTile
             label="LOCATION"
             value={[props.profile.locationCity, props.profile.locationCountry].filter(Boolean).join(", ") || "—"}
@@ -705,6 +721,27 @@ export function AdminTalentEditor(props: {
               onChange={(e) => setBasicForm((p) => ({ ...p, nationality: e.target.value }))}
             />
           </label>
+
+          {Array.isArray(props.partners) && props.partners.length > 0 ? (
+            <label className="block md:col-span-2">
+              <div className="text-xs font-semibold text-black/50">Partner agency</div>
+              <select
+                className="mt-1 w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand-light"
+                value={basicForm.partnerId ?? ""}
+                onChange={(e) => setBasicForm((p) => ({ ...p, partnerId: e.target.value }))}
+              >
+                <option value="">Unassigned / Freelance</option>
+                {props.partners.map((partner) => (
+                  <option key={partner.id} value={partner.id}>
+                    {partner.displayName?.trim() || "Unnamed partner"}
+                  </option>
+                ))}
+              </select>
+              <div className="mt-1 text-[11px] text-black/40">
+                Assign this talent under a partner management agency. Pick Unassigned if talent = independent freelance model.
+              </div>
+            </label>
+          ) : null}
         </div>
         <div className="mt-6 flex items-center justify-end gap-2">
           <SecondaryButton onClick={() => setEditBasic(false)} disabled={saving}>
