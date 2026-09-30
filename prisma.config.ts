@@ -8,7 +8,11 @@ export default defineConfig({
   migrations: {
     path: "prisma/migrations",
   },
-  datasource: {
+     datasource: {
     url: process.env["DATABASE_URL"],
+    directUrl: process.env["DIRECT_URL"],
+    // Prisma v7 + Neon pooled: use postgres adapter + relation mode in CONFIG not schema
+    relationMode: "prisma",
+    adapter: "postgresql",
   },
 });

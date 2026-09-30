@@ -42,3 +42,15 @@ next-env.d.ts
 dev.db
 dev.db-*
 /uploads
+
+# ── Neon + security: NEVER commit env file with DB passwords ──
+.env
+.env.*
+!.env.example
+
+# ── Big ZIP backups ─────────────────────────────────────────────
+*.zip
+
+# ── Local DB backup file (no longer used, SQLite leftover) ────
+dev.db
+dev.db-journal
